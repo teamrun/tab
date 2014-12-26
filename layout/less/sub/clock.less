@@ -1,0 +1,30 @@
+.greet{
+    overflow: hidden;
+    color: #fff;
+    text-align: center;
+    .today-text{
+        font-size: 30px;
+    }
+    .g-value{
+        display: inline-block;
+        margin: 0;
+        font-size: 60px;
+        line-height: 1.1;
+
+        &.g-month:after,
+        &.g-hour:after,
+        &.g-minute:after{
+            content: ':';
+            position: relative;
+            top: -0.05em;
+            color: #ccc;
+            // margin-left: 0.125em;
+            margin-right: 0.1em;
+        }
+    }
+    .cal{
+
+    }
+    .clock{
+    }
+}

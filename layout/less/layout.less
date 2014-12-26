@@ -1,6 +1,23 @@
-@import "sub/header.less";
+@import "sub/clock.less";
+
+*{
+    box-sizing: border-box;
+    &:after,
+    &:before{
+        box-sizing: inherit;
+    }
+}
+
+html, body{
+    height: 100%;
+}
 body{
     margin: 0;
     padding: 20px;
     text-align: center;
+    background-image: url('../../img/deer.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    font-family: "Avenir" "Avenir next" "monaco" "Microsoft Yahei";
 }
