@@ -1,4 +1,5 @@
 .greet{
+    padding-top: 60px;
     overflow: hidden;
     color: #fff;
     text-align: center;
@@ -10,16 +11,26 @@
         margin: 0;
         font-size: 60px;
         line-height: 1.1;
+        color: rgba(255,255,255,0.75);
 
         &.g-month:after,
         &.g-hour:after,
         &.g-minute:after{
             content: ':';
             position: relative;
-            top: -0.05em;
-            color: #ccc;
+            top: -0.1em;
+            color: rgba(255,255,255,0.375);
             // margin-left: 0.125em;
-            margin-right: 0.1em;
+            margin-right: 0.075em;
+        }
+        &.g-month:after{
+            content: '-';
+        }
+
+        &.g-month,
+        &.g-date{
+            font-size: 100px;
+            font-weight: normal;
         }
     }
     .cal{
