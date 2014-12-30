@@ -93,6 +93,7 @@ gulp.task('watch', function(){
 
     gulp.watch(conf.js.watch, ['react']);
     gulp.watch(conf.js.reload, liveReload.changed);
+    gulp.watch('./index.html', liveReload.changed);
 
 });
 

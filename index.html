@@ -4,9 +4,33 @@
     <meta charset="UTF-8">
     <title>Chrome新标签页</title>
     <link rel="stylesheet" href="layout/css/layout.css" />
-    <script></script>
+    <style>
+        #google-search{
+            display: block;
+            width: 50%;
+            max-width: 400px;
+            height: 45px;
+            margin: 0 auto;
+            padding: 0 0.75em;
+            line-height: normal;
+            font-size: 20px;
+            outline: none;
+            background-color: rgba(255,255,255,0.125);
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 7px;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
+    <input type="text" autofocus="true" id="google-search" />
+    <script>
+        document.querySelector('#google-search').addEventListener('keydown', function(e){
+            if(e.keyCode == 13){
+                window.location.href= 'https://www.google.com/search?q=' + this.value;
+            }
+        });
+    </script>
     <div id="ctn">
         <h2>Loading...</h2>
     </div>
