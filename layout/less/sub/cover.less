@@ -1,0 +1,25 @@
+#cover{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    opacity: 1;
+    z-index: 0;
+
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    .tst(opacity 400ms ease;);
+
+    &.loading{
+        opacity: 0;
+    }
+    
+    img{
+        position: absolute;
+        height: 0px;
+        overflow: hidden;
+        visibility: hidden;
+    }
+}

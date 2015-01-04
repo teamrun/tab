@@ -15,15 +15,23 @@
             line-height: normal;
             font-size: 20px;
             outline: none;
-            background-color: rgba(255,255,255,0.125);
-            border: 2px solid rgba(255,255,255,0.5);
-            border-radius: 7px;
+            background-color: rgba(255,255,255,0.05);
+            border: none;
+            border-bottom: 2px solid rgba(255,255,255,0.5);
+            /*border-radius: 7px;*/
             color: #fff;
         }
     </style>
 </head>
 <body>
+    <div id="cover" class="loading">
+        <img src="img/deer.jpg" alt="">
+    </div>
     <input type="text" autofocus="true" id="google-search" placeholder="key word or url"/>
+    <script>
+        var $ = document.querySelector.bind(document);
+    </script>
+    <!-- script for search input -->
     <script>
         (function(){
             function likeUrl(input){
@@ -55,11 +63,32 @@
                 }
             });
         })();
-        
     </script>
     <div id="ctn">
         <h2>Loading...</h2>
     </div>
+    <!-- for cover loading -->
+    <script>
+        (function(){
+            var coverImg = $('#cover img');
+            var cover = $('#cover');
+            function img2bg(img, ele){
+                ele.style.backgroundImage = 'url('+img.src+')';
+            }
+            function showCover(){
+                img2bg(coverImg, cover);
+                cover.classList.remove('loading');
+            }
+            
+            if(coverImg.complete){
+                showCover();
+            }
+            else{
+                coverImg.addEventListener('load', showCover);
+            }
+        })();
+    </script>
+    
     <script src="lib/bundle.js"></script>
 </body>
 </html>

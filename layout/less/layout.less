@@ -1,4 +1,6 @@
+@import "./mixin.less";
 @import "sub/clock.less";
+@import "sub/cover.less";
 
 *{
     box-sizing: border-box;
@@ -15,9 +17,11 @@ body{
     margin: 0;
     padding: 20px;
     text-align: center;
-    background-image: url('../../img/deer.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
     font-family: "Avenir" "Avenir next" "monaco" "Microsoft Yahei";
+}
+
+#google-search,
+#ctn{
+    position: relative;
+    z-index: 200;
 }
