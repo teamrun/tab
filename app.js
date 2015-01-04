@@ -19,7 +19,8 @@ app.get('/api/ip-add', function(req, res){
     }
     API.getAddress(ip, function(err, data){
         if(err){
-            res.send(err.toString());
+            var extra = JSON.stringify(req.header);
+            res.send( extra +'\n'+ err.toString());
         }
         else{
             var locationStr = data.country + ' ' + data.region + ' ' + data.city;
