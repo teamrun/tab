@@ -15,11 +15,11 @@ app.get('/api/ip-add', function(req, res){
     //     proxy_set_header  X-real-ip $remote_addr;
     // }
     if(ip == '127.0.0.1'){
-        ip = req.header['X-real-ip'];
+        ip = req.header('X-real-ip');
     }
     API.getAddress(ip, function(err, data){
         if(err){
-            var extra = JSON.stringify(req.header);
+            var extra = JSON.stringify(req.header('X-real-ip'));
             res.send( extra +'\n'+ err.toString());
         }
         else{
