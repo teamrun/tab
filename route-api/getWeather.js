@@ -48,7 +48,7 @@ module.exports = {
                 else{
                     city = data.city;
                     // 带着"市"会找不到匹配的code
-                    city.replace('市', '');
+                    city = city.replace('市', '');
                     API.getWeather.all(city, function(err, seven, realtime){
                         sendAllWeatherData(res, err, seven, realtime, {city: city});
                     });
