@@ -7,7 +7,7 @@
             "results": [
                 {
                     "currentCity": "杭州",
-                    "pm25": "279",
+                    "pm25": "91",
                     "index": [
                         {
                             "title": "穿衣",
@@ -48,12 +48,12 @@
                     ],
                     "weather_data": [
                         {
-                            "date": "周二 01月06日 (实时：7℃)",
+                            "date": "周二 01月06日 (实时：6℃)",
                             "dayPictureUrl": "http://api.map.baidu.com/images/weather/day/xiaoyu.png",
                             "nightPictureUrl": "http://api.map.baidu.com/images/weather/night/yujiaxue.png",
                             "weather": "小雨转雨夹雪",
                             "wind": "北风4-5级",
-                            "temperature": "9 ~ 1℃"
+                            "temperature": "9 ~ 2℃"
                         },
                         {
                             "date": "周三",

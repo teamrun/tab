@@ -20,6 +20,11 @@ var routes = requireDir('./route-api');
 
 app.get('/api/ip-add', routes.getAddressByIp.route);
 app.get('/api/weather', routes.getWeather.route);
+app.get('/api/time', function(req, res){
+    var now = new Date();
+    var timeStr = (now.getMonth()+1) +'-'+now.getDate()+' '+now.getHours()+':'+now.getMinutes()+':'+now.getSeconds();
+    res.send('server current time: ', timeStr);
+});
 
 
 var server = app.listen(3008, function(){

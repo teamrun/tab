@@ -43,16 +43,17 @@ function hasRealtimeCache(cc){
          * 判断实时天气数据是否过期
          */
         var now = Date.now();
-        var chinaNow = now + (TIMEZONE_OFFSET*3600*1000);
         // 30分钟前的都算过期
-        var notOutDataTime = chinaNow - (30*60*1000);
+        var notOutDataTime = new Date(now - (30*60*1000));
+        var notOutDataStr = makeDouble(notOutDataTime.getHours()) + ':'+makeDouble(notOutDataTime.getMinutes());
 
         var count = weatherRealtimeData[code].length;
         if(count >0 ){
             var last = weatherRealtimeData[code][count-1];
             var data = last.weatherinfo;
-            // 时间戳上晚于过期
-            if( data.pubTs > notOutDataTime ){
+            // 时间戳上晚于过期, 而且不是前一天的...
+            log('compare: now:', notOutDataStr, 'last: ', data.time );
+            if( data.time > notOutDataStr && data.time.indexOf('23') !==0 ){
                 return last;
             }
             return false;
@@ -70,13 +71,13 @@ function saveRealtimeData(cc, data){
         weatherRealtimeData[code] = [];
     }
     // 添加pubTs;
-    var now = new Date();
-    var pubTime = data.weatherinfo.time;
-    var pubTimeArr = pubTime.split(':');
-    var pubTimeMinutes = parseInt(pubTimeArr[0]) * 60 + parseInt(pubTimeArr[1]);
-    var pusTs = (new Date(now.getFullYear() +'-'+(now.getMonth()+1)+'-'+(now.getDate()) )).valueOf() + (TIMEZONE_OFFSET*3600*1000) + pubTimeMinutes*60*1000;
+    // var now = new Date();
+    // var pubTime = data.weatherinfo.time;
+    // var pubTimeArr = pubTime.split(':');
+    // var pubTimeMinutes = parseInt(pubTimeArr[0]) * 60 + parseInt(pubTimeArr[1]);
+    // var pusTs = (new Date(now.getFullYear() +'-'+(now.getMonth()+1)+'-'+(now.getDate()) )).valueOf() + (TIMEZONE_OFFSET*3600*1000) + pubTimeMinutes*60*1000;
 
-    data.weatherinfo.pubTs = pusTs;
+    // data.weatherinfo.pubTs = pusTs;
     weatherRealtimeData[code].push(data);
     persistData(weatherRealtimeData, weatherRealtimeJsonFile);
 }
@@ -87,9 +88,9 @@ function hasForecastCache(cc){
     var city = cc.city;
     if(weatherForecastData[city]){
         // 检查是否过期
-        var chinaTs = Date.now() + (TIMEZONE_OFFSET*3600*1000);
-        var chinaDate = new Date(chinaTs);
-        var dateStr = (chinaDate.getFullYear()) + '-' + (chinaDate.getMonth()+1) + '-' + chinaDate.getDate();
+        var now = new Date();
+        // 今天的yyyy-MM-dd
+        var dateStr = (now.getFullYear()) + '-' + makeDouble(now.getMonth()+1) + '-' + makeDouble(now.getDate());
 
         var count = weatherForecastData[city].length;
         if(count <= 0){
@@ -97,6 +98,7 @@ function hasForecastCache(cc){
         }
         else{
             var last = weatherForecastData[city][count-1];
+            log('compare: now:', dateStr, 'last: ', last.date );
             if( dateStr == last.date ){
                 return last;
             }
