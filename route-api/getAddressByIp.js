@@ -3,7 +3,7 @@ var API = requireDir('./api');
 
 module.exports = {
     route: function(req, res){
-        var ip = req.ip;
+        var ip = req.query.ip || req.ip;
         // nginx反向代理后 原来的ip字段都被设为了本机
         // 在nginx反代配置中增加一条配置
         // location /api {

@@ -1,8 +1,18 @@
+var path = require('path');
+
 var request = require('request');
 var EP = require('eventproxy');
 
 var getCity = require('./getCity');
 var getCode = require('./getCityCode');
+var persistData = require('./persistData');
+
+// city: [weather data list]
+var weatherRealtimeData = require('../data/weatherRealtime.json');
+var weatherForecastData = require('../data/weatherForecast.json');
+
+var weatherRealtimeJsonFile = path.join(__dirname, '../data/weatherRealtime.json');
+var weatherForecastJsonFile = path.join(__dirname, '../data/weatherForecast.json');
 
 var log = console.log.bind(console);
 
@@ -15,6 +25,99 @@ var url = {
 
 var CITY_CODE_REG = /[0-9]{9}/;
 var CITY_NAME_REG = /[\u4e00-\u9fa5]{2,9}/;
+var TIMEZONE_OFFSET = 8;
+
+function makeDouble(n){
+    if(n<10){
+        return '0'+n;
+    }
+    else{
+        return String(n);
+    }
+}
+// ------------ 实时天气数据的缓存 取 和 存 ------------
+function hasRealtimeCache(cc){
+    var code = cc.code;
+    if(weatherRealtimeData[code]){
+        /* 
+         * 判断实时天气数据是否过期
+         */
+        var now = Date.now();
+        var chinaNow = now + (TIMEZONE_OFFSET*3600*1000);
+        // 30分钟前的都算过期
+        var notOutDataTime = chinaNow - (30*60*1000);
+
+        var count = weatherRealtimeData[code].length;
+        if(count >0 ){
+            var last = weatherRealtimeData[code][count-1];
+            var data = last.weatherinfo;
+            // 时间戳上晚于过期
+            if( data.pubTs > notOutDataTime ){
+                return last;
+            }
+            return false;
+        }
+        else{
+            return false;
+        }
+    }
+    return false;
+}
+
+function saveRealtimeData(cc, data){
+    var code = cc.code;
+    if( !weatherRealtimeData[code] ){
+        weatherRealtimeData[code] = [];
+    }
+    // 添加pubTs;
+    var now = new Date();
+    var pubTime = data.weatherinfo.time;
+    var pubTimeArr = pubTime.split(':');
+    var pubTimeMinutes = parseInt(pubTimeArr[0]) * 60 + parseInt(pubTimeArr[1]);
+    var pusTs = (new Date(now.getFullYear() +'-'+(now.getMonth()+1)+'-'+(now.getDate()) )).valueOf() + (TIMEZONE_OFFSET*3600*1000) + pubTimeMinutes*60*1000;
+
+    data.weatherinfo.pubTs = pusTs;
+    weatherRealtimeData[code].push(data);
+    persistData(weatherRealtimeData, weatherRealtimeJsonFile);
+}
+// ------------ end of 实时天气数据的缓存 取 和 存 ------------
+
+// ------------ 天气预报数据的缓存 取 和 存 ------------
+function hasForecastCache(cc){
+    var city = cc.city;
+    if(weatherForecastData[city]){
+        // 检查是否过期
+        var chinaTs = Date.now() + (TIMEZONE_OFFSET*3600*1000);
+        var chinaDate = new Date(chinaTs);
+        var dateStr = (chinaDate.getFullYear()) + '-' + (chinaDate.getMonth()+1) + '-' + chinaDate.getDate();
+
+        var count = weatherForecastData[city].length;
+        if(count <= 0){
+            return false;
+        }
+        else{
+            var last = weatherForecastData[city][count-1];
+            if( dateStr == last.date ){
+                return last;
+            }
+            return false;
+        }
+    }
+    else{
+        return false;
+    }
+}
+
+function saveForecastData(cc, data){
+    var city = cc.city;
+    if(!weatherForecastData[city]){
+        weatherForecastData[city] = [];
+    }
+    weatherForecastData[city].push(data);
+    persistData( weatherForecastData, weatherForecastJsonFile );
+}
+// ------------ end of天气预报数据的缓存 取 和 存 ------------
+
 
 // 通过一个模糊的参数 获取城市名称和代码
 function getCityAndCode(cityOrCode){
@@ -39,9 +142,9 @@ function getCityAndCode(cityOrCode){
  *      获取城市和代码 -> 拼接url -> 发送请求 -> 调用callback
  * 因此就构造一个可以生产function的函数, 接收[拼接url的function]
  * 
- * 
+ * 拓展: 增加取缓存 和 存入缓存 的操作
  */
-function gen(urlFn){
+function gen(urlFn, hasCache, saveToCache){
     return function(cityOrCode, callback){
         var cc = getCityAndCode(cityOrCode);
         if(cc === false){
@@ -50,6 +153,16 @@ function gen(urlFn){
             });
         }
         else{
+            // 有cache就读取cache
+            var cache = hasCache(cc);
+            if(cache !== false){
+                log('got cached data:', hasCache.name);
+                process.nextTick(function(){
+                    callback(null, cache);
+                });
+                return;
+            }
+            // 没有就去获取, 然后存进cache
             var url = urlFn(cc);
             log('gonna request: ', url);
             request(url, function(err, res, body){
@@ -61,7 +174,17 @@ function gen(urlFn){
                         callback(new Error('got wrong response status code: '+ res.statusCode));
                     }
                     else{
-                        callback(null, JSON.parse(body));
+                        try{
+                            var data = JSON.parse(body);
+                        }
+                        catch(err){
+                            log(err);
+                            callback(new Error('parse res body err:'+err.message));
+                            return;
+                        }
+                        
+                        callback(null, data);
+                        saveToCache(cc, data);
                     }
                 }
             });
@@ -74,11 +197,11 @@ var getSeven = gen(function(cc){
         log('警告: 没有可用的百度api key!');
     }
     return url.seven.replace('{{city}}', cc.city).replace('{{api_key}}', config.baidu_api_key);
-});
+}, hasForecastCache, saveForecastData);
 
 var getRealtime = gen(function(cc){
     return url.realtime.replace('{{code}}', cc.code);
-});
+}, hasRealtimeCache, saveRealtimeData);
 
 
 function getAll(cityOrCode, callback){
