@@ -4,10 +4,10 @@
 var API = requireDir('./api');
 
 // helper for two calls: have city; no city and get by ip
-function sendAllWeatherData(res, err, seven, realtime, extraData){
+function sendAllWeatherData(res, err, forecast, realtime, extraData){
     resData = extraData || {};
     if(!err){
-        resData.seven = seven;
+        resData.forecast = forecast;
         resData.realtime = realtime;
         res.send({
             code: 200,

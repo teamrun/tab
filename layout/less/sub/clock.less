@@ -1,5 +1,7 @@
+@fco: 0.8;
+
 .greet{
-    padding-top: 60px;
+    padding-top: 100px;
     overflow: hidden;
     color: #fff;
     text-align: center;
@@ -9,19 +11,16 @@
     .g-value{
         display: inline-block;
         margin: 0;
-        font-size: 60px;
-        line-height: 1.1;
-        color: rgba(255,255,255,0.75);
+        // line-height: 1.35;
 
         &.g-month:after,
-        &.g-hour:after,
-        &.g-minute:after{
+        &.g-hour:after{
             content: ':';
             position: relative;
             top: -0.1em;
-            color: rgba(255,255,255,0.375);
+            color: inherit;
             // margin-left: 0.125em;
-            margin-right: 0.075em;
+            // margin-right: 0.025em;
         }
         &.g-month:after{
             content: '-';
@@ -29,13 +28,33 @@
 
         &.g-month,
         &.g-date{
-            font-size: 100px;
+            font-size: 60px;
             font-weight: normal;
         }
     }
-    .cal{
-
+    .cal,
+    .clock{
+        color: rgba(255,255,255, @fco);
+    }
+    .time-text{
+        margin: 0.5em 0 0.25em 0;
+        font-size: 28px;
+        color: rgba(255,255,255, @fco);
+    }
+    .today-text{
+        margin: 0.25em 0;
     }
     .clock{
+        font-size: 120px;
+        font-weight: bold;
+        letter-spacing: 0.05em;
     }
+
+    .greet-words{
+        margin: 0.25em;
+        font-size: 50px;
+        font-weight: normal;
+        color: rgba(255,255,255, @fco);
+    }
+    .user-name{}
 }
