@@ -7,12 +7,12 @@ var getCity = require('./getCity');
 var getCode = require('./getCityCode');
 var persistData = require('./persistData');
 
-// city: [weather data list]
-var weatherRealtimeData = require('../data/weatherRealtime.json');
-var weatherForecastData = require('../data/weatherForecast.json');
+var weatherRealtimeJsonFile = path.join(config.jsonPath, './weatherRealtime.json');
+var weatherForecastJsonFile = path.join(config.jsonPath, './weatherForecast.json');
 
-var weatherRealtimeJsonFile = path.join(__dirname, '../data/weatherRealtime.json');
-var weatherForecastJsonFile = path.join(__dirname, '../data/weatherForecast.json');
+// city: [weather data list]
+var weatherRealtimeData = persistData.get(weatherRealtimeJsonFile);
+var weatherForecastData = persistData.get(weatherForecastJsonFile);
 
 var log = console.log.bind(console);
 
@@ -79,7 +79,7 @@ function saveRealtimeData(cc, data){
 
     // data.weatherinfo.pubTs = pusTs;
     weatherRealtimeData[code].push(data);
-    persistData(weatherRealtimeData, weatherRealtimeJsonFile);
+    persistData.set(weatherRealtimeData, weatherRealtimeJsonFile);
 }
 // ------------ end of 实时天气数据的缓存 取 和 存 ------------
 
@@ -116,7 +116,7 @@ function saveForecastData(cc, data){
         weatherForecastData[city] = [];
     }
     weatherForecastData[city].push(data);
-    persistData( weatherForecastData, weatherForecastJsonFile );
+    persistData.set( weatherForecastData, weatherForecastJsonFile );
 }
 // ------------ end of天气预报数据的缓存 取 和 存 ------------
 

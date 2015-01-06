@@ -2,8 +2,9 @@ var path = require('path');
 var request = require('request');
 var persistData = require('./persistData');
 
-var ipAddressData = require('../data/ipAddress.json');
-var ipAddressJsonFile = path.join(__dirname, '../data/ipAddress.json');
+var ipAddressJsonFile = path.join(config.jsonPath, './ipAddress.json');
+
+var ipAddressData = persistData.get(ipAddressJsonFile);
 
 
 var TB_IP_LIB = 'http://ip.taobao.com/service/getIpInfo.php';
@@ -26,7 +27,7 @@ function getAddByIp(ip, callback){
                     callback(null, data.data);
                     // 将数据缓存起来
                     ipAddressData[ip] = data.data;
-                    persistData(ipAddressData, ipAddressJsonFile);
+                    persistData.set(ipAddressData, ipAddressJsonFile);
                 }
                 else{
                     callback( new Error('got wrong res body code: '+ data.code + ', msg: '+ data.data));

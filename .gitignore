@@ -2,3 +2,7 @@
 layout/css/layout.css
 
 lib/bundle.js
+
+data/weatherForecast.json
+data/weatherRealtime.json
+data/ipAddress.json

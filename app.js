@@ -1,5 +1,6 @@
 var path = require('path');
 var requireDir = require('require-dir');
+var fse = require('fs-extra');
 
 var app = require('express')();
 var config = require('./config');
@@ -13,6 +14,10 @@ if(require.resolve('./localConfig')){
         config[i] = localConfig[i];
     }
 }
+var neededFolder = ['jsonPath'];
+neededFolder.forEach(function(k){
+    fse.mkdirpSync(config[k]);
+});
 
 
 var routes = requireDir('./route-api');
