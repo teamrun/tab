@@ -1,4 +1,4 @@
-var request = require('request');
+var path = require('path');
 var requireDir = require('require-dir');
 
 var app = require('express')();
@@ -17,6 +17,12 @@ if(require.resolve('./localConfig')){
 
 var routes = requireDir('./route-api');
 
+var A_DAY = 24*60*60;
+
+function sendCacheableFile(filePath, res){
+    res.set('cache-control', 'max-age='+30*A_DAY);
+    res.sendFile(filePath);
+}
 
 app.get('/api/ip-add', routes.getAddressByIp.route);
 app.get('/api/weather', routes.getWeather.route);
@@ -26,6 +32,12 @@ app.get('/api/time', function(req, res){
     res.send('server current time: ', timeStr);
 });
 
+app.get(/\/solid\/.+/, function(req, res){
+    var file = req.path;
+    file = file.substr('/solid'.length);
+    file = path.join(__dirname, file);
+    sendCacheableFile(file, res);
+});
 
 var server = app.listen(3008, function(){
     var port = server.address().port;
