@@ -1,12 +1,13 @@
 {
-  "name": "start-kit",
+  "name": "tab",
   "version": "0.0.1",
-  "description": "start kit",
-  "main": "index.js",
+  "description": "chrome new tab or home page, personal dashboard",
+  "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "teamrun",
   "license": "mit",
   "dependencies": {
     "envify": "^3.0.0",
