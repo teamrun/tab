@@ -21,7 +21,11 @@ module.exports = {
             }
             else{
                 var locationStr = data.country + ' ' + data.region + ' ' + data.city;
-                res.send('Got your address through your ip('+ip+'): ' +  locationStr);
+                // res.send('Got your address through your ip('+ip+'): ' +  locationStr);
+                res.send({
+                    code: 200,
+                    data: data
+                });
             }
         });
     }

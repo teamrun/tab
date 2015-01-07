@@ -1,5 +1,10 @@
 module.exports = {
     getJSON: function(url, param, callback){
+        if(param instanceof Function ){
+            callback = param;
+            param = undefined;
+        }
+
         var xhr = new XMLHttpRequest();
         xhr.onload = function(e){
             if( xhr.status == 200){
@@ -12,17 +17,20 @@ module.exports = {
         };
         // 
         var query = '';
-        if(url.indexOf('?')>=0){
-            query += '&'
+        if( param ){
+            if(url.indexOf('?')>=0){
+                query += '&'
+            }
+            else{
+                query += '?';
+            }
+            var arr = [];
+            for(var i in param){
+                arr.push( i +'='+param[i] );
+            }
+            query += arr.join('&');
         }
-        else{
-            query += '?';
-        }
-        var arr = [];
-        for(var i in param){
-            arr.push( i +'='+param[i] );
-        }
-        query += arr.join('&');
+        
         xhr.open("get", url+query, true);
         xhr.send();
     },
@@ -33,5 +41,11 @@ module.exports = {
         else{
             return String(n);
         }
+    },
+    isEmptyObj: function(obj){
+        for(var i in obj){
+            return false;
+        }
+        return true;
     }
 }
