@@ -8,7 +8,10 @@ module.exports = {
     get: function(file){
         var exist = fs.existsSync(file);
         if(exist){
-            var json = fs.readFileSync(file);
+            var json = JSON.parse(fs.readFileSync(file).toString());
+            if(Array.isArray(json)){
+                return {};
+            }
             return json;
         }
         else{

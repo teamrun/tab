@@ -25,7 +25,8 @@ var routes = requireDir('./route-api');
 var A_DAY = 24*60*60;
 
 function sendCacheableFile(filePath, res){
-    res.set('cache-control', 'max-age='+30*A_DAY);
+    // 手动设置max-age的header
+    res.set('cache-control', 'public, max-age='+30*A_DAY);
     res.sendFile(filePath);
 }
 

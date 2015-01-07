@@ -25,5 +25,13 @@ module.exports = {
         query += arr.join('&');
         xhr.open("get", url+query, true);
         xhr.send();
+    },
+    makeDouble: function(n){
+        if(n<10){
+            return '0'+n;
+        }
+        else{
+            return String(n);
+        }
     }
 }

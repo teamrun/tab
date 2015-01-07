@@ -3,6 +3,8 @@ var path = require('path');
 var request = require('request');
 var EP = require('eventproxy');
 
+var makeDouble = require('../util').makeDouble;
+
 var getCity = require('./getCity');
 var getCode = require('./getCityCode');
 var persistData = require('./persistData');
@@ -27,14 +29,6 @@ var CITY_CODE_REG = /[0-9]{9}/;
 var CITY_NAME_REG = /[\u4e00-\u9fa5]{2,9}/;
 var TIMEZONE_OFFSET = 8;
 
-function makeDouble(n){
-    if(n<10){
-        return '0'+n;
-    }
-    else{
-        return String(n);
-    }
-}
 // ------------ 实时天气数据的缓存 取 和 存 ------------
 function hasRealtimeCache(cc){
     var code = cc.code;
